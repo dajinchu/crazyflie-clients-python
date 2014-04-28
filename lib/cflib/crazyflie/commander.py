@@ -35,7 +35,7 @@ __all__ = ['Commander']
 
 from cflib.crtp.crtpstack import CRTPPacket, CRTPPort
 import struct
-
+import math
 
 class Commander():
     """
