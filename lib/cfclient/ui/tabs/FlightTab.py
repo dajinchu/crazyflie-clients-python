@@ -221,6 +221,7 @@ class FlightTab(Tab, flight_tab_class):
             self.actualRoll.setText(("%.2f" % data["stabilizer.roll"]))
             self.actualPitch.setText(("%.2f" % data["stabilizer.pitch"]))
             self.actualYaw.setText(("%.2f" % data["stabilizer.yaw"]))
+            self.helper.cf.commander.set_yaw(("%.2f" % data["stabilizer.yaw"]))
             self.actualThrust.setText("%.2f%%" %
                                       self.thrustToPercentage(
                                                       data["stabilizer.thrust"]))
