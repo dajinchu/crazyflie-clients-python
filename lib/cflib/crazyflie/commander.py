@@ -57,6 +57,22 @@ class Commander():
         """
         self._x_mode = enabled
 
+    def set_yaw(self, yaw):
+        """
+        Setter for FlightTab to give Commander yaw data for adjustments
+        """
+        self.yaw = -float(yaw)
+
+
+
+    def calculateAdjustment(self, roll, pitch):
+        
+        originalToTargetAngle = math.degrees(math.atan2(roll,pitch))
+        deltaYaw = self.yaw-originalToTargetAngle
+        strength = math.sqrt((roll*roll)+(pitch*pitch))
+        self.adjustedRoll = -math.sin(math.radians(deltaYaw))*strength
+        self.adjustedPitch = -math.cos(math.radians(deltaYaw))*strength
+
     def send_setpoint(self, roll, pitch, yaw, thrust):
         """
         Send a new control setpoint for roll/pitch/yaw/thust to the copter
@@ -64,11 +80,20 @@ class Commander():
         The arguments roll/pitch/yaw/trust is the new setpoints that should
         be sent to the copter
         """
+        
+        
+        self.targetRoll = roll
+        self.targetPitch = pitch
+        
+        
+        self.calculateAdjustment(roll, pitch)
+        
+        
         if self._x_mode:
             roll = 0.707 * (roll - pitch)
             pitch = 0.707 * (roll + pitch)
 
         pk = CRTPPacket()
         pk.port = CRTPPort.COMMANDER
-        pk.data = struct.pack('<fffH', roll, -pitch, yaw, thrust)
+        pk.data = struct.pack('<fffH', self.adjustedRoll, self.adjustedPitch, yaw, thrust)
         self._cf.send_packet(pk)
