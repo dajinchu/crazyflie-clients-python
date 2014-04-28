@@ -49,6 +49,11 @@ class Commander():
         """
         self._cf = crazyflie
         self._x_mode = False
+        self.yaw = 0
+        self.targetPitch = 0
+        self.targetRoll = 0
+        self.adjustedRoll = 0
+        self.adjustedPitch = 0
 
     def set_client_xmode(self, enabled):
         """
